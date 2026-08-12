@@ -52,6 +52,7 @@ public class Control : MonoBehaviour
         if(Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
             current_Y = up; //bay lên
+            transform.rotation = Quaternion.Euler(0, 0, 180f);
         }
         else
         {
@@ -59,7 +60,8 @@ public class Control : MonoBehaviour
         }
         if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
-            current_X = left; // Ép ngay lập tức đi sang trái 
+            current_X = left; // Ép ngay lập tức đi sang trái
+            transform.rotation = Quaternion.Euler(0, 0, 90f);
         }
         else
         {

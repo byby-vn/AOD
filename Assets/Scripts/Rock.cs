@@ -16,7 +16,7 @@ public class Rock : MonoBehaviour
         {
             transform.Translate(Vector3.right * fallSpeed * Time.deltaTime);
         }
-        if (transform.position.y < -10f || transform.position.x > 10f)
+        if (transform.position.y < -11f || transform.position.x > 11f)
         {
             Destroy(gameObject);
         }
