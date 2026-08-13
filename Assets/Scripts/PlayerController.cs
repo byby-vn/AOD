@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 public class Control : MonoBehaviour
 {
     [Header("Cấu hình nhảy")]
@@ -15,9 +16,15 @@ public class Control : MonoBehaviour
     private float objectHeight;
     [Header("Độ mượt (Càng cao càng nhanh trở về trạng thái trôi)")]
     public float smoothSpeed = 3f;
+    [Header("Text")]
     public GameObject gameOverPanel;
     public TextMeshProUGUI timeText;
+    [Header("Skill")]
+    public SpriteRenderer cardFront;
+    public SpriteRenderer cardBack;
+    public Animator cardAnimator;
     private float timer;
+    private bool isUsingSkill;
     private bool isLose = false;
     void Start()
     {
@@ -31,6 +38,9 @@ public class Control : MonoBehaviour
             objectWidth = spriteRenderer.bounds.extents.x;
             objectHeight= spriteRenderer.bounds.extents.y;
         }
+        cardFront.gameObject.SetActive(false);
+        cardBack.gameObject.SetActive(false); 
+        cardAnimator.gameObject.SetActive(false);
     }
     void Update()
     {
@@ -47,12 +57,16 @@ public class Control : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
+        if(Keyboard.current.sKey.wasPressedThisFrame && isUsingSkill == false)
+        {
+           StartCoroutine(ActiveSkill()); 
+        }
         float current_X = rb.linearVelocity.x;
         float current_Y = rb.linearVelocity.y;
         if(Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
             current_Y = up; //bay lên
-            transform.rotation = Quaternion.Euler(0, 0, 180f);
+            transform.rotation = Quaternion.Euler(0, 0, 0f);
         }
         else
         {
@@ -96,5 +110,18 @@ public class Control : MonoBehaviour
             gameOverPanel.SetActive(true);
             isLose = true;
         }
+    }
+    private IEnumerator ActiveSkill()
+    {
+        isUsingSkill = true;
+        float timeSkill = 3f;
+        cardAnimator.gameObject.SetActive(true);
+        cardAnimator.Play("Flip");
+        yield return new WaitForSeconds(timeSkill);
+        cardAnimator.Play("FlipBack");
+        yield return new WaitForSeconds(0.5f);
+        // Ẩn lá bài đi và mở lại khả năng bấm S
+        cardAnimator.gameObject.SetActive(false);
+        isUsingSkill = false;
     }
 }
