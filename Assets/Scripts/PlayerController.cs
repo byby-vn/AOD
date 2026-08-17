@@ -25,6 +25,8 @@ public class Control : MonoBehaviour
     public Animator cardAnimator;
     private float timer;
     private bool isUsingSkill;
+    private bool isHaveSkill;
+    private CardSkillManager.SkillName currentSkill;
     private bool isLose = false;
     void Start()
     {
@@ -57,8 +59,9 @@ public class Control : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
-        if(Keyboard.current.sKey.wasPressedThisFrame && isUsingSkill == false)
+        if(Keyboard.current.sKey.wasPressedThisFrame && isUsingSkill == false && isHaveSkill == true)
         {
+            isHaveSkill = false;
            StartCoroutine(ActiveSkill()); 
         }
         float current_X = rb.linearVelocity.x;
@@ -109,7 +112,14 @@ public class Control : MonoBehaviour
             Time.timeScale = 0f;
             gameOverPanel.SetActive(true);
             isLose = true;
-        }
+        } //ăn đá là thua
+        if(collision.gameObject.CompareTag("Card"))
+        {
+            Skill card = collision.gameObject.GetComponent<Skill>();
+            isHaveSkill = true;
+            currentSkill = card.skillType; // Lưu lại chòm sao lá bài vừa ăn
+            Debug.Log("<color=yellow>Player đã ăn lá bài:</color> " + currentSkill);
+        } //ăn skill nhận skill
     }
     private IEnumerator ActiveSkill()
     {
@@ -117,6 +127,7 @@ public class Control : MonoBehaviour
         float timeSkill = 3f;
         cardAnimator.gameObject.SetActive(true);
         cardAnimator.Play("Flip");
+        CardSkillManager.Instance.ActiveSkill(currentSkill);
         yield return new WaitForSeconds(timeSkill);
         cardAnimator.Play("FlipBack");
         yield return new WaitForSeconds(0.5f);
