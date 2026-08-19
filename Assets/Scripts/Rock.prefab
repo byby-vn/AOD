@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 5153943620497335402}
   - component: {fileID: 6149422714254704759}
   - component: {fileID: 6651706882272109309}
-  m_Layer: 0
-  m_Name: Circle
+  m_Layer: 8
+  m_Name: Rock
   m_TagString: Rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -20,7 +20,7 @@ public class Spawner : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
-        minBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0, mainCamera.nearClipPlane));
+        minBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.23f, mainCamera.nearClipPlane));
         maxBounds = mainCamera.ViewportToWorldPoint(new Vector3(1, 1, mainCamera.nearClipPlane));
     }
 
@@ -125,8 +125,8 @@ public class Spawner : MonoBehaviour
         GameObject newSkill = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
 
         // Lấy 1 chòm sao ngẫu nhiên từ Enum trong CardSkillManager
-        CardSkillManager.SkillName randomSkill = (CardSkillManager.SkillName)Random.Range(0, System.Enum.GetValues(typeof(CardSkillManager.SkillName)).Length);
-
+        //CardSkillManager.SkillName randomSkill = (CardSkillManager.SkillName)Random.Range(0, System.Enum.GetValues(typeof(CardSkillManager.SkillName)).Length);
+        CardSkillManager.SkillName randomSkill = CardSkillManager.SkillName.Pisces; 
         // Đổi tên object (ví dụ: "Card_Pisces")
         newSkill.name = "Card_" + randomSkill.ToString();
 

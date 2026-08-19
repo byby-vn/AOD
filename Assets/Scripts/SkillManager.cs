@@ -1,9 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class CardSkillManager : MonoBehaviour
 {
     // Singleton pattern để Player/Spawner dễ dàng truy cập
     public static CardSkillManager Instance { get; private set; }
+    public GameObject rocket;
 
     public enum SkillName
     {
@@ -19,7 +21,8 @@ public class CardSkillManager : MonoBehaviour
         Capricorn,  // Ma Kết
         Aquarius,   // Bảo Bình
         Pisces,     // Song Ngư
-        Ophiuchus   // Xà Phu
+        Ophiuchus,   // Xà Phu
+        None
     }
 
     private void Awake()
@@ -97,6 +100,69 @@ public class CardSkillManager : MonoBehaviour
                 break;
         }
     }
+    public void EndSkill(SkillName skillName)
+    {
+        Debug.Log("Ket thuc skill: " + skillName.ToString());
+
+        switch (skillName)
+        {
+            case SkillName.Aries:
+                // EndAriesSkill();
+                break;
+
+            case SkillName.Taurus:
+                // EndTaurusSkill();
+                break;
+
+            case SkillName.Gemini:
+                // EndGeminiSkill();
+                break;
+
+            case SkillName.Cancer:
+                // EndCancerSkill();
+                break;
+
+            case SkillName.Leo:
+                // EndLeoSkill();
+                break;
+
+            case SkillName.Virgo:
+                // EndVirgoSkill();
+                break;
+
+            case SkillName.Libra:
+                // EndLibraSkill();
+                break;
+
+            case SkillName.Scorpio:
+                // EndScorpioSkill();
+                break;
+
+            case SkillName.Sagittarius:
+                // EndSagittariusSkill();
+                break;
+
+            case SkillName.Capricorn:
+                // EndCapricornSkill();
+                break;
+
+            case SkillName.Aquarius:
+                // EndAquariusSkill();
+                break;
+
+            case SkillName.Pisces:
+                EndPiscesSkill();
+                break;
+
+            case SkillName.Ophiuchus:
+                // EndOphiuchusSkill();
+                break;
+
+            default:
+                Debug.LogWarning("Khong tim thay skill de ket thuc!");
+                break;
+        }
+    }
     private void ExecuteAriesSkill()
     {
         // Logic cho skill Bạch Dương (Ví dụ: Tăng tốc độ, húc vỡ chướng ngại vật)
@@ -154,9 +220,27 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecutePiscesSkill()
     {
-        // Logic cho skill Song Ngư (Ví dụ: Bơi mượt lướt qua chướng ngại)
+        Debug.Log("Đã kích hoạt skill Pisces");
+        rocket.layer = LayerMask.NameToLayer("Invincible");
+        Control control = rocket.GetComponent<Control>();
+        control.timeSkill = 5f;
+        SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
+        Color c = sr.color;
+        c.a = 0.4f;
+        sr.color = c;
     }
-
+    private void EndPiscesSkill()
+    {
+        SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
+        rocket.layer = LayerMask.NameToLayer("Rocket");
+        Color c = sr.color;
+        if (sr != null)
+        {
+            c = sr.color;
+            c.a = 1f;
+            sr.color = c;
+        }
+    }
     private void ExecuteOphiuchusSkill()
     {
         // Logic cho skill Xà Phu (Ví dụ: Skill ẩn cực mạnh/Xóa toàn bộ đá trên màn hình)

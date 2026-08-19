@@ -9,7 +9,8 @@ public class Control : MonoBehaviour
     public float up = 7f; //lực nhảy
     public float down = -1f;
     public float left = -7f;
-    public float right = 1f; 
+    public float right = 1f;
+    public float timeSkill = 3f; 
     private Rigidbody2D rb;
     private Camera mainCamera;
     private float objectWidth;
@@ -26,7 +27,7 @@ public class Control : MonoBehaviour
     private float timer;
     private bool isUsingSkill;
     private bool isHaveSkill;
-    private CardSkillManager.SkillName currentSkill;
+    private CardSkillManager.SkillName currentSkill = CardSkillManager.SkillName.None;
     private bool isLose = false;
     void Start()
     {
@@ -62,7 +63,7 @@ public class Control : MonoBehaviour
         if(Keyboard.current.sKey.wasPressedThisFrame && isUsingSkill == false && isHaveSkill == true)
         {
             isHaveSkill = false;
-           StartCoroutine(ActiveSkill()); 
+           StartCoroutine(ActiveSkill());
         }
         float current_X = rb.linearVelocity.x;
         float current_Y = rb.linearVelocity.y;
@@ -80,6 +81,10 @@ public class Control : MonoBehaviour
             current_X = left; // Ép ngay lập tức đi sang trái
             transform.rotation = Quaternion.Euler(0, 0, 90f);
         }
+        if(Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
+        {
+            transform.rotation = Quaternion.Euler(0,0,45f);
+        }
         else
         {
             current_X = Mathf.Lerp(current_X, right, Time.deltaTime * smoothSpeed);
@@ -90,8 +95,8 @@ public class Control : MonoBehaviour
     void ClampPositionToScreen()
     {
         // Lấy tọa độ mép màn hình theo thế giới 2D
-        Vector3 minScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0,0,mainCamera.nearClipPlane));
-        Vector3 maxScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(1, 1, mainCamera.nearClipPlane));
+        Vector3 minScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0,0.22f,mainCamera.nearClipPlane));
+        Vector3 maxScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0.99f, 1, mainCamera.nearClipPlane));
         // Vị trí giới hạn
         float minX = minScreenBounds.x + objectWidth;
         float maxX = maxScreenBounds.x - objectWidth;
@@ -124,11 +129,13 @@ public class Control : MonoBehaviour
     private IEnumerator ActiveSkill()
     {
         isUsingSkill = true;
-        float timeSkill = 3f;
         cardAnimator.gameObject.SetActive(true);
         cardAnimator.Play("Flip");
         CardSkillManager.Instance.ActiveSkill(currentSkill);
+        Debug.Log("TimeSkill là: " + timeSkill);
         yield return new WaitForSeconds(timeSkill);
+        CardSkillManager.Instance.EndSkill(currentSkill);
+        currentSkill = CardSkillManager.SkillName.None;
         cardAnimator.Play("FlipBack");
         yield return new WaitForSeconds(0.5f);
         // Ẩn lá bài đi và mở lại khả năng bấm S
