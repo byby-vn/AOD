@@ -6,7 +6,8 @@ public class CardSkillManager : MonoBehaviour
     // Singleton pattern để Player/Spawner dễ dàng truy cập
     public static CardSkillManager Instance { get; private set; }
     public GameObject rocket;
-
+    public GameObject shockwavePrefab;
+    private GameObject shockwave;
     public enum SkillName
     {
         Aries,      // Bạch Dương
@@ -107,7 +108,7 @@ public class CardSkillManager : MonoBehaviour
         switch (skillName)
         {
             case SkillName.Aries:
-                // EndAriesSkill();
+                EndAriesSkill();
                 break;
 
             case SkillName.Taurus:
@@ -165,7 +166,10 @@ public class CardSkillManager : MonoBehaviour
     }
     private void ExecuteAriesSkill()
     {
-        // Logic cho skill Bạch Dương (Ví dụ: Tăng tốc độ, húc vỡ chướng ngại vật)
+        shockwave = Instantiate(shockwavePrefab, rocket.transform);
+        shockwave.transform.localPosition = Vector3.zero;
+        Control control = rocket.GetComponent<Control>();
+        control.timeSkill = 5f;
     }
 
     private void ExecuteTaurusSkill()
@@ -228,6 +232,12 @@ public class CardSkillManager : MonoBehaviour
         Color c = sr.color;
         c.a = 0.4f;
         sr.color = c;
+    }
+    private void EndAriesSkill()
+    {
+        Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
+        shockwaveAnimator.Play("FadeOut");
+        Destroy(shockwave,0.3f);  
     }
     private void EndPiscesSkill()
     {

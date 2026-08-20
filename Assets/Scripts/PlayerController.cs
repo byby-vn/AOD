@@ -130,14 +130,15 @@ public class Control : MonoBehaviour
     {
         isUsingSkill = true;
         cardAnimator.gameObject.SetActive(true);
-        cardAnimator.Play("Flip");
         CardSkillManager.Instance.ActiveSkill(currentSkill);
+        cardAnimator.Play("Flip");
         Debug.Log("TimeSkill là: " + timeSkill);
         yield return new WaitForSeconds(timeSkill);
+        cardAnimator.Play("FlipBack");
+        yield return new WaitForSeconds(0.2f);
         CardSkillManager.Instance.EndSkill(currentSkill);
         currentSkill = CardSkillManager.SkillName.None;
-        cardAnimator.Play("FlipBack");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         // Ẩn lá bài đi và mở lại khả năng bấm S
         cardAnimator.gameObject.SetActive(false);
         isUsingSkill = false;
