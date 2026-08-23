@@ -168,8 +168,7 @@ public class CardSkillManager : MonoBehaviour
     {
         shockwave = Instantiate(shockwavePrefab, rocket.transform);
         shockwave.transform.localPosition = Vector3.zero;
-        Control control = rocket.GetComponent<Control>();
-        control.timeSkill = 5f;
+        Control.Instance.timeSkill = 5f;
     }
 
     private void ExecuteTaurusSkill()
@@ -226,8 +225,7 @@ public class CardSkillManager : MonoBehaviour
     {
         Debug.Log("Đã kích hoạt skill Pisces");
         rocket.layer = LayerMask.NameToLayer("Invincible");
-        Control control = rocket.GetComponent<Control>();
-        control.timeSkill = 5f;
+        Control.Instance.timeSkill = 5f;
         SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
         Color c = sr.color;
         c.a = 0.4f;
@@ -237,10 +235,11 @@ public class CardSkillManager : MonoBehaviour
     {
         Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
         shockwaveAnimator.Play("FadeOut");
-        Destroy(shockwave,0.3f);  
+        Destroy(shockwave, 0.3f);
     }
     private void EndPiscesSkill()
     {
+
         SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
         rocket.layer = LayerMask.NameToLayer("Rocket");
         Color c = sr.color;

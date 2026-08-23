@@ -5,12 +5,13 @@ using TMPro;
 using System.Collections;
 public class Control : MonoBehaviour
 {
+    public static Control Instance { get; private set; }
     [Header("Cấu hình nhảy")]
     public float up = 7f; //lực nhảy
     public float down = -1f;
     public float left = -7f;
     public float right = 1f;
-    public float timeSkill = 3f; 
+    public float timeSkill = 0; 
     private Rigidbody2D rb;
     private Camera mainCamera;
     private float objectWidth;
@@ -21,14 +22,26 @@ public class Control : MonoBehaviour
     public GameObject gameOverPanel;
     public TextMeshProUGUI timeText;
     [Header("Skill")]
-    public SpriteRenderer cardFront;
-    public SpriteRenderer cardBack;
+    
     public Animator cardAnimator;
+    public GameObject cardBack;
     private float timer;
-    private bool isUsingSkill;
     private bool isHaveSkill;
-    private CardSkillManager.SkillName currentSkill = CardSkillManager.SkillName.None;
+    public bool isUsingSkill = false;
+    private Coroutine activeSkillCouroutine;
+    public CardSkillManager.SkillName currentSkill = CardSkillManager.SkillName.None;
     private bool isLose = false;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -41,8 +54,6 @@ public class Control : MonoBehaviour
             objectWidth = spriteRenderer.bounds.extents.x;
             objectHeight= spriteRenderer.bounds.extents.y;
         }
-        cardFront.gameObject.SetActive(false);
-        cardBack.gameObject.SetActive(false); 
         cardAnimator.gameObject.SetActive(false);
     }
     void Update()
@@ -60,10 +71,14 @@ public class Control : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
-        if(Keyboard.current.sKey.wasPressedThisFrame && isUsingSkill == false && isHaveSkill == true)
+        if(Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill == true)
         {
             isHaveSkill = false;
-           StartCoroutine(ActiveSkill());
+            if(activeSkillCouroutine != null)
+            {
+                StopCoroutine(activeSkillCouroutine);
+            }
+            activeSkillCouroutine = StartCoroutine(ActiveSkill());
         }
         float current_X = rb.linearVelocity.x;
         float current_Y = rb.linearVelocity.y;
@@ -123,6 +138,7 @@ public class Control : MonoBehaviour
             Skill card = collision.gameObject.GetComponent<Skill>();
             isHaveSkill = true;
             currentSkill = card.skillType; // Lưu lại chòm sao lá bài vừa ăn
+            cardAnimator.Play("Fade");
             Debug.Log("<color=yellow>Player đã ăn lá bài:</color> " + currentSkill);
         } //ăn skill nhận skill
     }
@@ -142,5 +158,6 @@ public class Control : MonoBehaviour
         // Ẩn lá bài đi và mở lại khả năng bấm S
         cardAnimator.gameObject.SetActive(false);
         isUsingSkill = false;
+        activeSkillCouroutine = null;
     }
 }

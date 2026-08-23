@@ -83,7 +83,9 @@ public class Skill : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Lá bài đã chạm vô người chơi");
-            Destroy(gameObject);
+            Control.Instance.cardAnimator.gameObject.SetActive(true);
+            //Control.Instance.cardAnimator.Play("Fade");
+            Destroy(gameObject,0.01f);
         }
     }
 }
