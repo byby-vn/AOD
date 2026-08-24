@@ -120,7 +120,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Cancer:
-                // EndCancerSkill();
+                EndCancerSkill();
                 break;
 
             case SkillName.Leo:
@@ -183,7 +183,9 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteCancerSkill()
     {
-        // Logic cho skill Cự Giải (Ví dụ: Tạo khiên bảo vệ)
+        shockwave = Instantiate(shockwavePrefab, rocket.transform);
+        shockwave.transform.localPosition = Vector3.zero;
+        Control.Instance.timeSkill = 5f;
     }
 
     private void ExecuteLeoSkill()
@@ -232,6 +234,12 @@ public class CardSkillManager : MonoBehaviour
         sr.color = c;
     }
     private void EndAriesSkill()
+    {
+        Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
+        shockwaveAnimator.Play("FadeOut");
+        Destroy(shockwave, 0.3f);
+    }
+    private void EndCancerSkill()
     {
         Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
         shockwaveAnimator.Play("FadeOut");
