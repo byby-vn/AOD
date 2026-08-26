@@ -24,12 +24,5 @@ public class ComponentSkillCircle : MonoBehaviour
                 rb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
             }
         }
-        if (Control.Instance.currentSkill == CardSkillManager.SkillName.Cancer)
-        {
-            if (collision.CompareTag("Rock"))
-            {
-                Destroy(collision.gameObject);
-            }
-        }
     }
 }

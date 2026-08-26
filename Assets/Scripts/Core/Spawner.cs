@@ -38,11 +38,11 @@ public class Spawner : MonoBehaviour
             {
                 if (spawnOnTop)
                 {
-                    //SpawnRockTop();
+                    SpawnRockTop();
                 }
                 else
                 {
-                    //SpawnRockLeft();
+                    SpawnRockLeft();
                 }
                 timer = 0f; // Reset đếm thời gian spawn Rock
             }

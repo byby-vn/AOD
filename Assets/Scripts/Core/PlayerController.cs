@@ -11,7 +11,7 @@ public class Control : MonoBehaviour
     public float down = -1f;
     public float left = -7f;
     public float right = 1f;
-    public float timeSkill = 0; 
+    public float timeSkill = 0;
     private Rigidbody2D rb;
     private Camera mainCamera;
     private float objectWidth;
@@ -22,7 +22,7 @@ public class Control : MonoBehaviour
     public GameObject gameOverPanel;
     public TextMeshProUGUI timeText;
     [Header("Skill")]
-    
+
     public Animator cardAnimator;
     public GameObject cardBack;
     private float timer;
@@ -49,40 +49,48 @@ public class Control : MonoBehaviour
         mainCamera = Camera.main;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         gameOverPanel.SetActive(false);
-        if(spriteRenderer!=null) //lấy kích thước tên lửa
+        if (spriteRenderer != null) //lấy kích thước tên lửa
         {
             objectWidth = spriteRenderer.bounds.extents.x;
-            objectHeight= spriteRenderer.bounds.extents.y;
+            objectHeight = spriteRenderer.bounds.extents.y;
         }
         cardAnimator.gameObject.SetActive(false);
     }
     void Update()
     {
         timer += Time.deltaTime;
-        int min = Mathf.FloorToInt(timer/60f);
-        int sec = Mathf.FloorToInt(timer%60f);
+        int min = Mathf.FloorToInt(timer / 60f);
+        int sec = Mathf.FloorToInt(timer % 60f);
         int frac = Mathf.FloorToInt((timer * 100f) % 100f);
         timeText.text = string.Format("{0:00}m {1:00}s {2:00}'", min, sec, frac);
-        if(isLose)
+        if (isLose)
         {
-            if(Mouse.current.leftButton.wasPressedThisFrame)
+            if (Mouse.current.leftButton.wasPressedThisFrame)
             {
                 Time.timeScale = 1f;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
-        if(Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill == true)
+        if (Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill == true)
         {
             isHaveSkill = false;
-            if(activeSkillCouroutine != null)
+            if (activeSkillCouroutine != null)
             {
                 StopCoroutine(activeSkillCouroutine);
             }
-            activeSkillCouroutine = StartCoroutine(ActiveSkill());
+            if (currentSkill == CardSkillManager.SkillName.Cancer)
+            {
+                // Nếu là Cancer -> Bắt đầu lắng nghe phím hướng trước
+                activeSkillCouroutine = StartCoroutine(WaitForDirection());
+            }
+            else
+            {
+                activeSkillCouroutine = StartCoroutine(ActiveSkill());
+            }
         }
         float current_X = rb.linearVelocity.x;
         float current_Y = rb.linearVelocity.y;
-        if(Keyboard.current.upArrowKey.wasPressedThisFrame)
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
             current_Y = up; //bay lên
             transform.rotation = Quaternion.Euler(0, 0, 0f);
@@ -96,21 +104,21 @@ public class Control : MonoBehaviour
             current_X = left; // Ép ngay lập tức đi sang trái
             transform.rotation = Quaternion.Euler(0, 0, 90f);
         }
-        if(Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
-            transform.rotation = Quaternion.Euler(0,0,45f);
+            transform.rotation = Quaternion.Euler(0, 0, 45f);
         }
         else
         {
             current_X = Mathf.Lerp(current_X, right, Time.deltaTime * smoothSpeed);
         }
-        rb.linearVelocity = new Vector2(current_X,current_Y);
+        rb.linearVelocity = new Vector2(current_X, current_Y);
         ClampPositionToScreen();
     }
     void ClampPositionToScreen()
     {
         // Lấy tọa độ mép màn hình theo thế giới 2D
-        Vector3 minScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0,0.22f,mainCamera.nearClipPlane));
+        Vector3 minScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.22f, mainCamera.nearClipPlane));
         Vector3 maxScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0.99f, 1, mainCamera.nearClipPlane));
         // Vị trí giới hạn
         float minX = minScreenBounds.x + objectWidth;
@@ -123,17 +131,17 @@ public class Control : MonoBehaviour
         clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
         clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
         // Áp dụng vị trí mới
-        transform.position = clampedPosition; 
+        transform.position = clampedPosition;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Rock"))
+        if (collision.gameObject.CompareTag("Rock"))
         {
             Time.timeScale = 0f;
             gameOverPanel.SetActive(true);
             isLose = true;
         } //ăn đá là thua
-        if(collision.gameObject.CompareTag("Card"))
+        if (collision.gameObject.CompareTag("Card"))
         {
             Skill card = collision.gameObject.GetComponent<Skill>();
             isHaveSkill = true;
@@ -142,11 +150,11 @@ public class Control : MonoBehaviour
             Debug.Log("<color=yellow>Player đã ăn lá bài:</color> " + currentSkill);
         } //ăn skill nhận skill
     }
-    private IEnumerator ActiveSkill()
+    private IEnumerator ActiveSkill(Vector2 dir = default)
     {
         isUsingSkill = true;
         cardAnimator.gameObject.SetActive(true);
-        CardSkillManager.Instance.ActiveSkill(currentSkill);
+        CardSkillManager.Instance.ActiveSkill(currentSkill,dir);
         cardAnimator.Play("Flip");
         Debug.Log("TimeSkill là: " + timeSkill);
         yield return new WaitForSeconds(timeSkill);
@@ -159,5 +167,30 @@ public class Control : MonoBehaviour
         cardAnimator.gameObject.SetActive(false);
         isUsingSkill = false;
         activeSkillCouroutine = null;
+    }
+    private IEnumerator WaitForDirection()
+    {
+        Vector2 selectedDirection = Vector2.up;
+        float waitTime = 0.5f;
+        float timer = 0f;
+        bool hasSelected = false;
+        while(timer<waitTime)
+        {
+            if(Keyboard.current.upArrowKey.wasPressedThisFrame)
+            {
+                selectedDirection = Vector2.up;
+                hasSelected = true;
+                break;
+            }
+            if(Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            {
+                selectedDirection = Vector2.left;
+                hasSelected = true;
+                break;
+            }
+            timer += Time.unscaledDeltaTime; // Dùng unscaledDeltaTime để không bị ảnh hưởng nếu pause game
+            yield return null;
+        }
+        activeSkillCouroutine = StartCoroutine(ActiveSkill(selectedDirection));
     }
 }

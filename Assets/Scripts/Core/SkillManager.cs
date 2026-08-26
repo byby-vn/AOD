@@ -1,13 +1,15 @@
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class CardSkillManager : MonoBehaviour
 {
     // Singleton pattern để Player/Spawner dễ dàng truy cập
     public static CardSkillManager Instance { get; private set; }
     public GameObject rocket;
     public GameObject shockwavePrefab;
+    public GameObject shieldPrefab;
     private GameObject shockwave;
+    private GameObject shield;
     public enum SkillName
     {
         Aries,      // Bạch Dương
@@ -38,7 +40,7 @@ public class CardSkillManager : MonoBehaviour
         }
     }
     // Hàm Router điều hướng kích hoạt skill
-    public void ActiveSkill(SkillName skillName)
+    public void ActiveSkill(SkillName skillName, Vector2 dir = default)
     {
         Debug.Log("Kich hoat skill: " + skillName.ToString());
 
@@ -57,7 +59,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Cancer:
-                ExecuteCancerSkill();
+                ExecuteCancerSkill(dir);
                 break;
 
             case SkillName.Leo:
@@ -181,10 +183,16 @@ public class CardSkillManager : MonoBehaviour
         // Logic cho skill Song Tử (Ví dụ: Phân thân tạo thêm 1 tên lửa giả)
     }
 
-    private void ExecuteCancerSkill()
+    private void ExecuteCancerSkill(Vector2 dir)
     {
-        shockwave = Instantiate(shockwavePrefab, rocket.transform);
-        shockwave.transform.localPosition = Vector3.zero;
+        if(dir == Vector2.up)
+        {
+            shield = Instantiate(shieldPrefab,new Vector3(0,4,0),Quaternion.identity);
+        }
+        if(dir == Vector2.left)
+        {
+            shield = Instantiate(shieldPrefab,new Vector3(-10,3.5f,0),Quaternion.Euler(0,0,90));
+        }
         Control.Instance.timeSkill = 5f;
     }
 
@@ -241,9 +249,9 @@ public class CardSkillManager : MonoBehaviour
     }
     private void EndCancerSkill()
     {
-        Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
-        shockwaveAnimator.Play("FadeOut");
-        Destroy(shockwave, 0.3f);
+        Animator shieldAnimator = shield.GetComponent<Animator>();
+        shieldAnimator.Play("Short");
+        Destroy(shield, 0.3f);
     }
     private void EndPiscesSkill()
     {
