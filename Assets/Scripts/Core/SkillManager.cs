@@ -114,7 +114,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Taurus:
-                // EndTaurusSkill();
+                EndTaurusSkill();
                 break;
 
             case SkillName.Gemini:
@@ -175,7 +175,9 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteTaurusSkill()
     {
-        // Logic cho skill Kim Ngưu (Ví dụ: Giáp kiên cố, miễn nhiễm sát thương)
+        shockwave = Instantiate(shockwavePrefab, rocket.transform);
+        shockwave.transform.localPosition = Vector3.zero;
+        Control.Instance.timeSkill = 1f;
     }
 
     private void ExecuteGeminiSkill()
@@ -245,6 +247,11 @@ public class CardSkillManager : MonoBehaviour
     {
         Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
         shockwaveAnimator.Play("FadeOut");
+        Destroy(shockwave, 0.3f);
+    }
+    private void EndTaurusSkill()
+    {
+        Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
         Destroy(shockwave, 0.3f);
     }
     private void EndCancerSkill()
