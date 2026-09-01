@@ -13,9 +13,9 @@ public class Control : MonoBehaviour
     public float right = 1f;
     public float timeSkill = 0;
     private Rigidbody2D rb;
-    private Camera mainCamera;
-    private float objectWidth;
-    private float objectHeight;
+    public Camera mainCamera;
+    public float objectWidth;
+    public float objectHeight;
     [Header("Độ mượt (Càng cao càng nhanh trở về trạng thái trôi)")]
     public float smoothSpeed = 3f;
     [Header("Text")]
@@ -31,6 +31,7 @@ public class Control : MonoBehaviour
     private Coroutine activeSkillCouroutine;
     public CardSkillManager.SkillName currentSkill = CardSkillManager.SkillName.None;
     private bool isLose = false;
+    [HideInInspector] public Vector3 pendingDashTargetPos;
     private void Awake()
     {
         if (Instance == null)
@@ -73,16 +74,14 @@ public class Control : MonoBehaviour
         }
         if (currentSkill != CardSkillManager.SkillName.Gemini) //Gemini là skill bị động không cho bấm S
         {
-            if (Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill == true)
+            if (Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill)
             {
                 isHaveSkill = false;
-                if (activeSkillCouroutine != null)
+                if (activeSkillCouroutine != null) StopCoroutine(activeSkillCouroutine);
+
+                // Cả Cancer và Leo đều cần bắt phím hướng trước khi kích hoạt
+                if (currentSkill == CardSkillManager.SkillName.Cancer || currentSkill == CardSkillManager.SkillName.Leo)
                 {
-                    StopCoroutine(activeSkillCouroutine);
-                }
-                if (currentSkill == CardSkillManager.SkillName.Cancer)
-                {
-                    // Nếu là Cancer -> Bắt đầu lắng nghe phím hướng trước
                     activeSkillCouroutine = StartCoroutine(WaitForDirection());
                 }
                 else
@@ -205,9 +204,19 @@ public class Control : MonoBehaviour
                 hasSelected = true;
                 break;
             }
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            {
+                selectedDirection = new Vector2(-1f, 1f).normalized;
+                break;
+            }
             timer += Time.unscaledDeltaTime; // Dùng unscaledDeltaTime để không bị ảnh hưởng nếu pause game
             yield return null;
         }
         activeSkillCouroutine = StartCoroutine(ActiveSkill(selectedDirection));
+    }
+    // Animation Event ở Frame 5 vẫn nằm trên Rocket để dịch chuyển chính nó
+    public void OnDashTeleport()
+    {
+        transform.position = pendingDashTargetPos; //
     }
 }

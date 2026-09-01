@@ -1307,6 +1307,8 @@ MonoBehaviour:
   rocket: {fileID: 1944516782}
   shockwavePrefab: {fileID: 5513955523921842895, guid: e5a6916a261b49dc6a9569dd85f47784, type: 3}
   shieldPrefab: {fileID: 652354716535335929, guid: 6ee480091b0a333969b14ef82956e968, type: 3}
+  dashTrailPrefab: {fileID: 8915715808607820055, guid: fa5e5798c70f75bad8529bcf1c74fc1b, type: 3}
+  dashDistance: 5
 --- !u!4 &1427088205
 Transform:
   m_ObjectHideFlags: 0
@@ -1599,6 +1601,7 @@ GameObject:
   - component: {fileID: 1944516785}
   - component: {fileID: 1944516784}
   - component: {fileID: 1944516783}
+  - component: {fileID: 1944516788}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1623,6 +1626,9 @@ MonoBehaviour:
   left: -5
   right: 5
   timeSkill: 3
+  mainCamera: {fileID: 0}
+  objectWidth: 0
+  objectHeight: 0
   smoothSpeed: 3
   gameOverPanel: {fileID: 270316224}
   timeText: {fileID: 170608950}
@@ -1630,6 +1636,7 @@ MonoBehaviour:
   cardBack: {fileID: 1500663502}
   isUsingSkill: 0
   currentSkill: 13
+  pendingDashTargetPos: {x: 0, y: 0, z: 0}
 --- !u!70 &1944516784
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1763,12 +1770,34 @@ Transform:
   m_GameObject: {fileID: 1944516782}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.21, y: -1.18, z: 0}
+  m_LocalPosition: {x: 1.99, y: 1.48, z: 0}
   m_LocalScale: {x: 0.53224003, y: 0.57275, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1944516788
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944516782}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6e47abdfa73bc9e588aea8fc92d71c88, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

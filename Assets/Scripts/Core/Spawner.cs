@@ -38,11 +38,11 @@ public class Spawner : MonoBehaviour
             {
                 if (spawnOnTop)
                 {
-                    SpawnRockTop();
+                    //SpawnRockTop();
                 }
                 else
                 {
-                    SpawnRockLeft();
+                    //SpawnRockLeft();
                 }
                 timer = 0f; // Reset đếm thời gian spawn Rock
             }
@@ -126,7 +126,7 @@ public class Spawner : MonoBehaviour
 
         // Lấy 1 chòm sao ngẫu nhiên từ Enum trong CardSkillManager
         //CardSkillManager.SkillName randomSkill = (CardSkillManager.SkillName)Random.Range(0, System.Enum.GetValues(typeof(CardSkillManager.SkillName)).Length);
-        CardSkillManager.SkillName randomSkill = CardSkillManager.SkillName.Taurus; 
+        CardSkillManager.SkillName randomSkill = CardSkillManager.SkillName.Leo; 
         // Đổi tên object (ví dụ: "Card_Pisces")
         newSkill.name = "Card_" + randomSkill.ToString();
 
