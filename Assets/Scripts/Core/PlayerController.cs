@@ -71,23 +71,27 @@ public class Control : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
-        if (Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill == true)
+        if (currentSkill != CardSkillManager.SkillName.Gemini) //Gemini là skill bị động không cho bấm S
         {
-            isHaveSkill = false;
-            if (activeSkillCouroutine != null)
+            if (Keyboard.current.sKey.wasPressedThisFrame && isHaveSkill == true)
             {
-                StopCoroutine(activeSkillCouroutine);
-            }
-            if (currentSkill == CardSkillManager.SkillName.Cancer)
-            {
-                // Nếu là Cancer -> Bắt đầu lắng nghe phím hướng trước
-                activeSkillCouroutine = StartCoroutine(WaitForDirection());
-            }
-            else
-            {
-                activeSkillCouroutine = StartCoroutine(ActiveSkill());
+                isHaveSkill = false;
+                if (activeSkillCouroutine != null)
+                {
+                    StopCoroutine(activeSkillCouroutine);
+                }
+                if (currentSkill == CardSkillManager.SkillName.Cancer)
+                {
+                    // Nếu là Cancer -> Bắt đầu lắng nghe phím hướng trước
+                    activeSkillCouroutine = StartCoroutine(WaitForDirection());
+                }
+                else
+                {
+                    activeSkillCouroutine = StartCoroutine(ActiveSkill());
+                }
             }
         }
+
         float current_X = rb.linearVelocity.x;
         float current_Y = rb.linearVelocity.y;
         if (Keyboard.current.upArrowKey.wasPressedThisFrame)
@@ -137,9 +141,22 @@ public class Control : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Rock"))
         {
-            Time.timeScale = 0f;
-            gameOverPanel.SetActive(true);
-            isLose = true;
+            if (currentSkill == CardSkillManager.SkillName.Gemini)
+            {
+                isHaveSkill = false;
+                if (activeSkillCouroutine != null)
+                {
+                    StopCoroutine(activeSkillCouroutine);
+                }
+                activeSkillCouroutine = StartCoroutine(ActiveSkill());
+            }
+            else
+            {
+                Time.timeScale = 0f;
+                gameOverPanel.SetActive(true);
+                isLose = true;
+            }
+
         } //ăn đá là thua
         if (collision.gameObject.CompareTag("Card"))
         {
@@ -154,7 +171,7 @@ public class Control : MonoBehaviour
     {
         isUsingSkill = true;
         cardAnimator.gameObject.SetActive(true);
-        CardSkillManager.Instance.ActiveSkill(currentSkill,dir);
+        CardSkillManager.Instance.ActiveSkill(currentSkill, dir);
         cardAnimator.Play("Flip");
         Debug.Log("TimeSkill là: " + timeSkill);
         yield return new WaitForSeconds(timeSkill);
@@ -174,15 +191,15 @@ public class Control : MonoBehaviour
         float waitTime = 0.5f;
         float timer = 0f;
         bool hasSelected = false;
-        while(timer<waitTime)
+        while (timer < waitTime)
         {
-            if(Keyboard.current.upArrowKey.wasPressedThisFrame)
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
             {
                 selectedDirection = Vector2.up;
                 hasSelected = true;
                 break;
             }
-            if(Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
             {
                 selectedDirection = Vector2.left;
                 hasSelected = true;

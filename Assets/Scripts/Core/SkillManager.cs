@@ -118,7 +118,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Gemini:
-                // EndGeminiSkill();
+                EndGeminiSkill();
                 break;
 
             case SkillName.Cancer:
@@ -182,7 +182,13 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteGeminiSkill()
     {
-        // Logic cho skill Song Tử (Ví dụ: Phân thân tạo thêm 1 tên lửa giả)
+        Debug.Log("Đã kích hoạt skill Gemini");
+        rocket.layer = LayerMask.NameToLayer("Invincible");
+        Control.Instance.timeSkill = 1f;
+        SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
+        Color c = sr.color;
+        c.a = 0.4f;
+        sr.color = c;
     }
 
     private void ExecuteCancerSkill(Vector2 dir)
@@ -254,6 +260,18 @@ public class CardSkillManager : MonoBehaviour
         Animator shockwaveAnimator = shockwave.GetComponent<Animator>();
         Destroy(shockwave, 0.3f);
     }
+    private void EndGeminiSkill()
+    {
+        SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
+        rocket.layer = LayerMask.NameToLayer("Rocket");
+        Color c = sr.color;
+        if (sr != null)
+        {
+            c = sr.color;
+            c.a = 1f;
+            sr.color = c;
+        }
+    }
     private void EndCancerSkill()
     {
         Animator shieldAnimator = shield.GetComponent<Animator>();
@@ -262,7 +280,6 @@ public class CardSkillManager : MonoBehaviour
     }
     private void EndPiscesSkill()
     {
-
         SpriteRenderer sr = rocket.GetComponent<SpriteRenderer>();
         rocket.layer = LayerMask.NameToLayer("Rocket");
         Color c = sr.color;
