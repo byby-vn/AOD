@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 5072179382703240255}
   - component: {fileID: 5468157454228233137}
   - component: {fileID: 6381850800118564456}
+  - component: {fileID: 2922338078894868857}
   m_Layer: 0
   m_Name: DashTrail_Holder
   m_TagString: Untagged
@@ -207,3 +208,15 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.5}
   m_Radius: 0.5
+--- !u!114 &2922338078894868857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8915715808607820055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9571fb7aa3b7fc54da463233530c2339, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeoDash

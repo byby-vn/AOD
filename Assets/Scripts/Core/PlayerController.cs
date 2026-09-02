@@ -187,21 +187,18 @@ public class Control : MonoBehaviour
     private IEnumerator WaitForDirection()
     {
         Vector2 selectedDirection = Vector2.up;
-        float waitTime = 0.5f;
+        float waitTime = 999f;
         float timer = 0f;
-        bool hasSelected = false;
         while (timer < waitTime)
         {
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
             {
                 selectedDirection = Vector2.up;
-                hasSelected = true;
                 break;
             }
             if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
             {
                 selectedDirection = Vector2.left;
-                hasSelected = true;
                 break;
             }
             if (Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)

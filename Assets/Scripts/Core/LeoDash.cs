@@ -10,12 +10,9 @@ public class LeoDash : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (Control.Instance.currentSkill == CardSkillManager.SkillName.Leo)
+        if (collision.CompareTag("Rock"))
         {
-            if (collision.CompareTag("Rock"))
-            {
-                Destroy(collision.gameObject);
-            }
+            Destroy(collision.gameObject);
         }
     }
 }

@@ -291,6 +291,7 @@ public class CardSkillManager : MonoBehaviour
         Debug.Log("Kết thúc Skill Leo (The Strength)");
         Animator dashAnimator = dash.GetComponent<Animator>();
         dashAnimator.Play("DashTrail_Shrink");
+        rocket.layer = LayerMask.NameToLayer("Rocket");//tắt bất tử
         Destroy(dash, 0.3f);
     }
     private void EndPiscesSkill()
@@ -331,6 +332,7 @@ public class CardSkillManager : MonoBehaviour
 
             // 2. Spawn Vệt Lướt & Play FadeOut trên Tên Lửa
             SpawnDashTrail(currentDir);
+            rocket.layer = LayerMask.NameToLayer("Invincible"); //buff bất tử khi lướt tránh chết oan
             if (rocketAnim != null) rocketAnim.Play("Player_FadeOut");
 
             // 3. Chờ Frame 5 dịch chuyển và hiện lại Tên Lửa
@@ -347,7 +349,7 @@ public class CardSkillManager : MonoBehaviour
             float waitTimer = 0f;
             bool hasPressedSecond = false;
 
-            while (waitTimer < 1.0f)
+            while (waitTimer < 2.0f)
             {
                 bool up = Keyboard.current.upArrowKey.wasPressedThisFrame;
                 bool left = Keyboard.current.leftArrowKey.wasPressedThisFrame;
@@ -401,6 +403,7 @@ public class CardSkillManager : MonoBehaviour
         {
             Animator dashAnimator = dash.GetComponent<Animator>();
             if (dashAnimator != null) dashAnimator.Play("DashTrail_Shrink");
+            rocket.layer = LayerMask.NameToLayer("Rocket");
             Destroy(dash, 0.3f);
         }
     }
