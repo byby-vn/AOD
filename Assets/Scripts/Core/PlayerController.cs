@@ -93,30 +93,61 @@ public class Control : MonoBehaviour
 
         float current_X = rb.linearVelocity.x;
         float current_Y = rb.linearVelocity.y;
-        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+        if (currentSkill == CardSkillManager.SkillName.Virgo && isUsingSkill == true)
         {
-            current_Y = up; //bay lên
-            transform.rotation = Quaternion.Euler(0, 0, 0f);
+            if (Keyboard.current.upArrowKey.isPressed)
+            {
+                current_Y = up; //bay lên
+                transform.rotation = Quaternion.Euler(0, 0, 0f);
+            }
+            else
+            {
+                current_Y = Mathf.Lerp(current_Y, down, Time.deltaTime * smoothSpeed);
+            }
+            if (Keyboard.current.leftArrowKey.isPressed)
+            {
+                current_X = left; // Ép ngay lập tức đi sang trái
+                transform.rotation = Quaternion.Euler(0, 0, 90f);
+            }
+            if (Keyboard.current.upArrowKey.isPressed && Keyboard.current.leftArrowKey.isPressed)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 45f);
+            }
+            else
+            {
+                current_X = Mathf.Lerp(current_X, right, Time.deltaTime * smoothSpeed);
+            }
+            rb.linearVelocity = new Vector2(current_X, current_Y);
+            ClampPositionToScreen();
         }
         else
         {
-            current_Y = Mathf.Lerp(current_Y, down, Time.deltaTime * smoothSpeed);
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+            {
+                current_Y = up; //bay lên
+                transform.rotation = Quaternion.Euler(0, 0, 0f);
+            }
+            else
+            {
+                current_Y = Mathf.Lerp(current_Y, down, Time.deltaTime * smoothSpeed);
+            }
+            if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            {
+                current_X = left; // Ép ngay lập tức đi sang trái
+                transform.rotation = Quaternion.Euler(0, 0, 90f);
+            }
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 45f);
+            }
+            else
+            {
+                current_X = Mathf.Lerp(current_X, right, Time.deltaTime * smoothSpeed);
+            }
+            rb.linearVelocity = new Vector2(current_X, current_Y);
+            ClampPositionToScreen();
         }
-        if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
-        {
-            current_X = left; // Ép ngay lập tức đi sang trái
-            transform.rotation = Quaternion.Euler(0, 0, 90f);
-        }
-        if (Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 45f);
-        }
-        else
-        {
-            current_X = Mathf.Lerp(current_X, right, Time.deltaTime * smoothSpeed);
-        }
-        rb.linearVelocity = new Vector2(current_X, current_Y);
-        ClampPositionToScreen();
+
     }
     void ClampPositionToScreen()
     {

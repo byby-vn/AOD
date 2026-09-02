@@ -218,7 +218,7 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteVirgoSkill()
     {
-        // Logic cho skill Xử Nữ (Ví dụ: Hồi máu / Tăng điểm thưởng)
+        Control.Instance.timeSkill = 6f;
     }
 
     private void ExecuteLibraSkill()
@@ -293,6 +293,10 @@ public class CardSkillManager : MonoBehaviour
         dashAnimator.Play("DashTrail_Shrink");
         rocket.layer = LayerMask.NameToLayer("Rocket");//tắt bất tử
         Destroy(dash, 0.3f);
+    }
+    private void EndVirgoSkill()
+    {
+        Debug.Log("Kết thúc Skill Virgo");
     }
     private void EndPiscesSkill()
     {
