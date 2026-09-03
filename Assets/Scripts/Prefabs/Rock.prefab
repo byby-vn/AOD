@@ -170,5 +170,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3632eacf1a6b23608763811cb49f085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
-  fallSpeed: 5
+  fallSpeed: 4
   isFall: 0

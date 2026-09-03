@@ -130,11 +130,11 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Leo:
-                // EndLeoSkill();
+                EndLeoSkill();
                 break;
 
             case SkillName.Virgo:
-                // EndVirgoSkill();
+                EndVirgoSkill();
                 break;
 
             case SkillName.Libra:
@@ -223,7 +223,7 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteLibraSkill()
     {
-        // Logic cho skill Thiên Bình (Ví dụ: Cân bằng lại HP / Dọn dẹp map)
+        Control.Instance.timeSkill = 3.5f;
     }
 
     private void ExecuteScorpioSkill()
@@ -289,14 +289,18 @@ public class CardSkillManager : MonoBehaviour
     {
         // Dọn dẹp trạng thái visual/effect của Leo nếu có
         Debug.Log("Kết thúc Skill Leo (The Strength)");
-        Animator dashAnimator = dash.GetComponent<Animator>();
-        dashAnimator.Play("DashTrail_Shrink");
-        rocket.layer = LayerMask.NameToLayer("Rocket");//tắt bất tử
-        Destroy(dash, 0.3f);
+        // Animator dashAnimator = dash.GetComponent<Animator>();
+        // dashAnimator.Play("DashTrail_Shrink");
+        // rocket.layer = LayerMask.NameToLayer("Rocket");//tắt bất tử
+        // Destroy(dash, 0.3f);
     }
     private void EndVirgoSkill()
     {
         Debug.Log("Kết thúc Skill Virgo");
+    }
+    private void EndLibraSkill()
+    {
+        Debug.Log("Kết thúc Skill Libra");
     }
     private void EndPiscesSkill()
     {
