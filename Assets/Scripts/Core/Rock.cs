@@ -42,7 +42,7 @@ public class Rock : MonoBehaviour
             }
             transform.Translate(Vector3.right * nowSpeed * Time.deltaTime);
         }
-        if (transform.position.y < -15f || transform.position.x > 15f || transform.position.y > 15f || transform.position.x < -15f)
+        if (transform.position.y < -20f || transform.position.x > 20f || transform.position.y > 20f || transform.position.x < -20f)
         {
             Destroy(gameObject);
         }

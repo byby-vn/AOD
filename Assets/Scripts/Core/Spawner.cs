@@ -5,12 +5,15 @@ public class Spawner : MonoBehaviour
 {
     public GameObject RockPrefab;
     public GameObject cardPrefab;
+    public GameObject rocketPrefab;
     public float TimeSpawnARock;
     public float TimeSpawnACard;
+    public float TimeSpawnARocket;
     public float circleSpawn;
     public float timeWait;
 
     private float timer;
+    private float rocketTimer;
     private int wave = 0;
     private bool isTimeSpawn = true;
     private float CardTimer;
@@ -38,11 +41,11 @@ public class Spawner : MonoBehaviour
             {
                 if (spawnOnTop)
                 {
-                    //SpawnRockTop();
+                    SpawnRockTop();
                 }
                 else
                 {
-                    //SpawnRockLeft();
+                    SpawnRockLeft();
                 }
                 timer = 0f; // Reset đếm thời gian spawn Rock
             }
@@ -73,6 +76,15 @@ public class Spawner : MonoBehaviour
             }
             CardTimer = 0f; // Reset đếm thời gian spawn Card
         }
+        if (Control.Instance.currentSkill == CardSkillManager.SkillName.Sagittarius && Control.Instance.isUsingSkill == true)
+        {
+            rocketTimer += Time.deltaTime;
+            if (rocketTimer >= TimeSpawnARocket)
+            {
+               SpawnRocketDown();
+                rocketTimer = 0f;
+            }
+        }
     }
 
     void SpawnRockTop()
@@ -87,13 +99,19 @@ public class Spawner : MonoBehaviour
         Rock rockScript = newRock.GetComponent<Rock>();
         if (rockScript != null) rockScript.isFall = true;
     }
+    void SpawnRocketDown()
+    {
+        float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
+        float spawnY = minBounds.y - 1f;
+        Vector3 spawnPosition = new Vector3(randomX, spawnY, 0f);
+        GameObject newRocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
+    }
     void SpawnSkillTop()
     {
         float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
         float spawnY = maxBounds.y + 1f;
         Vector3 spawnPosition = new Vector3(randomX, spawnY, 0f);
         SpawnSkillCard(spawnPosition, true);
-    
     }
     void SpawnRockLeft()
     {
@@ -109,6 +127,13 @@ public class Spawner : MonoBehaviour
         if (rb != null) rb.gravityScale = 0f;
         if (rockScript != null) rockScript.isFall = false;
 
+    }
+    void SpawnRocketRight()
+    {
+        float randomY = Random.Range(minBounds.y + 0.5f, maxBounds.y - 0.5f);
+        float spawnX = maxBounds.x + 1f;
+        Vector3 spawnPosition = new Vector3(randomY, spawnX, 0f);
+        GameObject newRocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
     }
     void SpawnSkillLeft()
     {
@@ -126,7 +151,7 @@ public class Spawner : MonoBehaviour
 
         // Lấy 1 chòm sao ngẫu nhiên từ Enum trong CardSkillManager
         //CardSkillManager.SkillName randomSkill = (CardSkillManager.SkillName)Random.Range(0, System.Enum.GetValues(typeof(CardSkillManager.SkillName)).Length);
-        CardSkillManager.SkillName randomSkill = CardSkillManager.SkillName.Libra; 
+        CardSkillManager.SkillName randomSkill = CardSkillManager.SkillName.Sagittarius;
         // Đổi tên object (ví dụ: "Card_Pisces")
         newSkill.name = "Card_" + randomSkill.ToString();
 

@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5446587174691259333, guid: ea4efd493f629b7159036b5f361fea54, type: 3}
       propertyPath: skillType
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1219,7 +1219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1292,7 +1292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1502,7 +1502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1540,8 +1540,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   RockPrefab: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
   cardPrefab: {fileID: 2986730962182702636, guid: ea4efd493f629b7159036b5f361fea54, type: 3}
+  rocketPrefab: {fileID: 6411552736245263139, guid: d53c78f78b8c340c095b3837713cd59e, type: 3}
   TimeSpawnARock: 0.6
   TimeSpawnACard: 20
+  TimeSpawnARocket: 0.4
   circleSpawn: 3
   timeWait: 2
 --- !u!4 &1353708993

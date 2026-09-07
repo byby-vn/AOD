@@ -148,7 +148,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Sagittarius:
-                // EndSagittariusSkill();
+                EndSagittariusSkill();
                 break;
 
             case SkillName.Capricorn:
@@ -205,7 +205,11 @@ public class CardSkillManager : MonoBehaviour
         }
         if (dir == Vector2.left)
         {
-            shield = Instantiate(shieldPrefab, new Vector3(-10, 3.5f, 0), Quaternion.Euler(0, 0, 90));
+            shield = Instantiate(shieldPrefab, new Vector3(-10f, 3.5f, 0), Quaternion.Euler(0, 0, 90));
+        }
+        if (dir == new Vector2(-1f,1f).normalized)
+        {
+            shield = Instantiate(shieldPrefab, new Vector3(-2.96f, 2.88f, 0), Quaternion.Euler(0, 0, 45));
         }
         Control.Instance.timeSkill = 5f;
     }
@@ -238,7 +242,7 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteSagittariusSkill()
     {
-        // Logic cho skill Nhân Mã (Ví dụ: Bắn mưa tên lửa/đạn tầm xa)
+        Control.Instance.timeSkill = 5f;
     }
 
     private void ExecuteCapricornSkill()
@@ -313,6 +317,10 @@ public class CardSkillManager : MonoBehaviour
         Animator animator = bullet.GetComponent<Animator>();
         animator.Play("Bullet_fadeOut");
         Destroy(bullet,0.3f);
+    }
+    private void EndSagittariusSkill()
+    {
+        Debug.Log("Kết thúc skill Sagittarius");
     }
     private void EndPiscesSkill()
     {
