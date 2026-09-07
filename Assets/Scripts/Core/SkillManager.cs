@@ -8,9 +8,11 @@ public class CardSkillManager : MonoBehaviour
     public GameObject rocket;
     public GameObject shockwavePrefab;
     public GameObject shieldPrefab;
+    public GameObject bulletPrefab;
     private GameObject shockwave;
     private GameObject shield;
     private GameObject dash;
+    private GameObject bullet;
     [Header("Leo Skill Setup")]
     public GameObject dashTrailPrefab;
     public float dashDistance = 5f;
@@ -79,7 +81,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Scorpio:
-                ExecuteScorpioSkill();
+                ExecuteScorpioSkill(dir);
                 break;
 
             case SkillName.Sagittarius:
@@ -138,11 +140,11 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Libra:
-                // EndLibraSkill();
+                EndLibraSkill();
                 break;
 
             case SkillName.Scorpio:
-                // EndScorpioSkill();
+                EndScorpioSkill();
                 break;
 
             case SkillName.Sagittarius:
@@ -226,9 +228,12 @@ public class CardSkillManager : MonoBehaviour
         Control.Instance.timeSkill = 3.5f;
     }
 
-    private void ExecuteScorpioSkill()
+    private void ExecuteScorpioSkill(Vector2 dir)
     {
-        // Logic cho skill Bọ Cạp (Ví dụ: Bắn đạn độc gây sát thương liên tục)
+        Vector3 spawnPosition = new Vector3(rocket.transform.position.x, rocket.transform.position.y, 0f);
+        bullet = Instantiate(bulletPrefab, spawnPosition,Quaternion.identity);
+        bullet.GetComponent<Bullet>().dir = dir;
+        Control.Instance.timeSkill = 5.5f;
     }
 
     private void ExecuteSagittariusSkill()
@@ -301,6 +306,13 @@ public class CardSkillManager : MonoBehaviour
     private void EndLibraSkill()
     {
         Debug.Log("Kết thúc Skill Libra");
+    }
+    private void EndScorpioSkill()
+    {
+        Debug.Log("Kết thúc skill Scorpio");
+        Animator animator = bullet.GetComponent<Animator>();
+        animator.Play("Bullet_fadeOut");
+        Destroy(bullet,0.3f);
     }
     private void EndPiscesSkill()
     {

@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+using NUnit.Framework;
 public class Control : MonoBehaviour
 {
     public static Control Instance { get; private set; }
@@ -80,7 +81,7 @@ public class Control : MonoBehaviour
                 if (activeSkillCouroutine != null) StopCoroutine(activeSkillCouroutine);
 
                 // Cả Cancer và Leo đều cần bắt phím hướng trước khi kích hoạt
-                if (currentSkill == CardSkillManager.SkillName.Cancer || currentSkill == CardSkillManager.SkillName.Leo)
+                if (currentSkill == CardSkillManager.SkillName.Cancer || currentSkill == CardSkillManager.SkillName.Leo || currentSkill == CardSkillManager.SkillName.Scorpio)
                 {
                     activeSkillCouroutine = StartCoroutine(WaitForDirection());
                 }
@@ -220,25 +221,58 @@ public class Control : MonoBehaviour
         Vector2 selectedDirection = Vector2.up;
         float waitTime = 999f;
         float timer = 0f;
-        while (timer < waitTime)
+        float inputBufferTime = 0.01f; // Thời gian chờ để người chơi bấm phím thứ 2 (150ms)
+        bool hasPressedAnyKey = false;
+
+        while (timer < waitTime && !hasPressedAnyKey)
         {
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame || Keyboard.current.leftArrowKey.wasPressedThisFrame)
             {
-                selectedDirection = Vector2.up;
-                break;
-            }
-            if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
-            {
-                selectedDirection = Vector2.left;
-                break;
-            }
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame && Keyboard.current.leftArrowKey.wasPressedThisFrame)
-            {
-                selectedDirection = new Vector2(-1f, 1f).normalized;
-                break;
+                hasPressedAnyKey = true; // Đã phát hiện bấm phím -> Bắt đầu tính thời gian buffer
             }
             timer += Time.unscaledDeltaTime; // Dùng unscaledDeltaTime để không bị ảnh hưởng nếu pause game
             yield return null;
+        }
+        if (hasPressedAnyKey)
+        {
+            timer = 0;
+            Debug.Log("Đang đợi phím thứ 2");
+            while (timer < inputBufferTime)
+            {
+                timer += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            bool is_up = Keyboard.current.upArrowKey.isPressed;
+            bool is_left = Keyboard.current.leftArrowKey.isPressed;
+            if (hasPressedAnyKey)
+            {
+                float bufferTimer = 0f;
+                while (bufferTimer < inputBufferTime)
+                {
+                    bufferTimer += Time.unscaledDeltaTime;
+                    yield return null;
+                }
+
+                // BƯỚC 3: Kiểm tra phím nào ĐANG ĐƯỢC GIỮ
+                bool isUp = Keyboard.current.upArrowKey.isPressed;
+                bool isLeft = Keyboard.current.leftArrowKey.isPressed;
+
+                if (isUp && isLeft)
+                {
+                    Debug.Log("<color=green>Hướng 45 độ</color>");
+                    selectedDirection = new Vector2(-1f, 1f).normalized;
+                }
+                else if (isLeft)
+                {
+                    Debug.Log("<color=yellow>Hướng Left</color>");
+                    selectedDirection = Vector2.left;
+                }
+                else if (isUp)
+                {
+                    Debug.Log("<color=cyan>Hướng Up</color>");
+                    selectedDirection = Vector2.up;
+                }
+            }
         }
         activeSkillCouroutine = StartCoroutine(ActiveSkill(selectedDirection));
     }
