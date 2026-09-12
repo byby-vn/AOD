@@ -6,6 +6,7 @@ public class CardSkillManager : MonoBehaviour
     // Singleton pattern để Player/Spawner dễ dàng truy cập
     public static CardSkillManager Instance { get; private set; }
     public GameObject rocket;
+    public GameObject radar;
     public GameObject shockwavePrefab;
     public GameObject shieldPrefab;
     public GameObject bulletPrefab;
@@ -152,7 +153,7 @@ public class CardSkillManager : MonoBehaviour
                 break;
 
             case SkillName.Capricorn:
-                // EndCapricornSkill();
+                EndCapricornSkill();
                 break;
 
             case SkillName.Aquarius:
@@ -247,7 +248,10 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteCapricornSkill()
     {
-        // Logic cho skill Ma Kết (Ví dụ: Đóng băng vật thể xung quanh)
+        Radar radarScript = radar.GetComponent<Radar>();
+        int Count = radarScript.DestroyRockInRadar();
+        radarScript.SpawnDevil(Count);
+        Control.Instance.timeSkill = 0.1f;
     }
 
     private void ExecuteAquariusSkill()
@@ -321,6 +325,10 @@ public class CardSkillManager : MonoBehaviour
     private void EndSagittariusSkill()
     {
         Debug.Log("Kết thúc skill Sagittarius");
+    }
+    private void EndCapricornSkill()
+    {
+        Debug.Log("Kết thúc skill Capricorn");
     }
     private void EndPiscesSkill()
     {
