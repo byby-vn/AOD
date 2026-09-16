@@ -1,48 +1,86 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Rock : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float fallSpeed = 10f;
-    private float nowSpeed;
-    private Rigidbody2D rigidbody2D;
+    public float nowSpeed;
+    
+    [Header("Libra Settings")]
+    public float libraGravityScale = -0.5f;
+    public float maxPhysicsVelocity = 4f;
+
+    private Rigidbody2D rb;
     public bool isFall;
+    private bool wasUsingLibra;
+
+    // Lực trọng lực chuẩn Trái Đất
+    private readonly Vector2 gravityForce = new Vector2(0f, -9.81f);
+
     void Start()
     {
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        Physics2D.gravity = Vector2.zero;
+        rb = GetComponent<Rigidbody2D>();
     }
-    // Update is called once per frame
-    void Update()
+
+    void FixedUpdate()
     {
-        if (isFall)
+        // sử dụng trọng lực cục bộ bằng addforce 
+        if (rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            if (Control.Instance.currentSkill == CardSkillManager.SkillName.Libra && Control.Instance.isUsingSkill == true)
+            if (isFall)
             {
-                rigidbody2D.gravityScale = -1;
-                nowSpeed = -fallSpeed;
+                // Đá rơi: Chịu lực kéo XUỐNG DƯỚI 
+                rb.AddForce(gravityForce * rb.gravityScale, ForceMode2D.Force);
             }
             else
             {
-                rigidbody2D.gravityScale = 1;
-                nowSpeed = fallSpeed;
+                // Đá ngang: Chịu lực kéo SANG PHẢI 
+                Vector2 horizontalGravity = new Vector2(9.81f, 0f);
+                rb.AddForce(horizontalGravity * rb.gravityScale, ForceMode2D.Force);
             }
-            transform.Translate(Vector3.down * nowSpeed * Time.deltaTime);
+        }
+    }
+
+    void Update()
+    {
+        bool isLibra = Control.Instance.currentSkill == CardSkillManager.SkillName.Libra && Control.Instance.isUsingSkill;
+        bool isAquarius = Control.Instance.currentSkill == CardSkillManager.SkillName.Aquarius && Control.Instance.isUsingSkill;
+
+        if (isAquarius)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
+            nowSpeed = 0f;
+        }
+        else if (isLibra)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.gravityScale = libraGravityScale;
+            nowSpeed = -fallSpeed;
+
+            // Kẹp trần vận tốc tích lũy
+            rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxPhysicsVelocity);
+            wasUsingLibra = true;
         }
         else
         {
-            rigidbody2D.gravityScale = 0;
-            if (Control.Instance.currentSkill == CardSkillManager.SkillName.Libra && Control.Instance.isUsingSkill == true)
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.gravityScale = 1f;
+            nowSpeed = fallSpeed;
+            rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxPhysicsVelocity);
+            if (wasUsingLibra)
             {
-                nowSpeed = -fallSpeed;
+                rb.linearVelocity = Vector2.zero;
+                wasUsingLibra = false;
             }
-            else
-            {
-                nowSpeed = fallSpeed;
-            }
-            transform.Translate(Vector3.right * nowSpeed * Time.deltaTime);
         }
-        if (transform.position.y < -20f || transform.position.x > 20f || transform.position.y > 20f || transform.position.x < -20f)
+
+        // Động cơ di chuyển Translate
+        Vector3 moveDirection = isFall ? Vector3.down : Vector3.right;
+        transform.Translate(moveDirection * nowSpeed * Time.deltaTime);
+
+        // Hủy đá khi out map
+        if (Mathf.Abs(transform.position.x) > 20f || Mathf.Abs(transform.position.y) > 20f)
         {
             Destroy(gameObject);
         }

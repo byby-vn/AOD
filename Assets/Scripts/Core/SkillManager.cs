@@ -256,7 +256,7 @@ public class CardSkillManager : MonoBehaviour
 
     private void ExecuteAquariusSkill()
     {
-        // Logic cho skill Bảo Bình (Ví dụ: Tạo sóng nước đẩy lùi đá)
+        Control.Instance.timeSkill = 3f;
     }
 
     private void ExecutePiscesSkill()
@@ -329,6 +329,10 @@ public class CardSkillManager : MonoBehaviour
     private void EndCapricornSkill()
     {
         Debug.Log("Kết thúc skill Capricorn");
+    }
+    private void EndAquariusSkill()
+    {
+        Debug.Log("Kết thúc skill Aquarius");
     }
     private void EndPiscesSkill()
     {

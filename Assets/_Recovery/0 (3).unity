@@ -168,20 +168,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5153943620497335402, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: m_GravityScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: isFall
+      propertyPath: m_BodyType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: fallSpeed
-      value: 4
+      propertyPath: isFall
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: brakeDeceleration
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: m_Name
@@ -250,7 +246,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5446587174691259333, guid: ea4efd493f629b7159036b5f361fea54, type: 3}
       propertyPath: skillType
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -446,17 +442,13 @@ PrefabInstance:
       propertyPath: m_BodyType
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5153943620497335402, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: m_GravityScale
+    - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
+      propertyPath: isFall
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: isFall
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: fallSpeed
-      value: 4
+      propertyPath: brakeDeceleration
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: m_Name
@@ -1844,16 +1836,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5153943620497335402, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: m_GravityScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: isFall
+      propertyPath: m_BodyType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
-      propertyPath: fallSpeed
-      value: 4
+      propertyPath: isFall
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651706882272109309, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
+      propertyPath: brakeDeceleration
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8029904849670963499, guid: 53a56327aeaad7907a318f34426b3d15, type: 3}
       propertyPath: m_Name

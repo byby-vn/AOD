@@ -153,7 +153,7 @@ public class Control : MonoBehaviour
     void ClampPositionToScreen()
     {
         // Lấy tọa độ mép màn hình theo thế giới 2D
-        Vector3 minScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.22f, mainCamera.nearClipPlane));
+        Vector3 minScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.23f, mainCamera.nearClipPlane));
         Vector3 maxScreenBounds = mainCamera.ViewportToWorldPoint(new Vector3(0.99f, 1, mainCamera.nearClipPlane));
         // Vị trí giới hạn
         float minX = minScreenBounds.x + objectWidth;

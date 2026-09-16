@@ -171,4 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
   fallSpeed: 4
+  nowSpeed: 0
+  libraGravityScale: -0.5
+  maxPhysicsVelocity: 4
   isFall: 0
