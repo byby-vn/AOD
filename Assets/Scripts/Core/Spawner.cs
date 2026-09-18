@@ -1,168 +1,221 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Spawner : MonoBehaviour
 {
+    [Header("Prefabs")]
     public GameObject RockPrefab;
     public GameObject cardPrefab;
+    public GameObject warning_up;
+    public GameObject warning_left;
     public GameObject rocketPrefab;
-    public float TimeSpawnARock;
-    public float TimeSpawnACard;
-    public float TimeSpawnARocket;
-    public float circleSpawn;
-    public float timeWait;
 
+    [Header("Wave Settings")]
+    public float TimeSpawnARock = 0.5f; // Tốc độ spawn đá (mấy giây/cục)
+    public float TimeWarning = 2f;      // Thời gian hiện cảnh báo
+    public float waveTime = 10f;        // Thời gian mưa đá kéo dài
+    public float timeWait = 3f;         // Thời gian nghỉ giữa các wave
+
+    [Header("Skill Settings")]
+    public float TimeSpawnARocket = 0.5f;
+
+    // Timers
+    private float TimeSpawnACard;
+    private float WarningTimer;
     private float timer;
+    private float waveTimer;
     private float rocketTimer;
-    private int wave = 0;
-    private bool isTimeSpawn = true;
     private float CardTimer;
+
+    // States
+    private bool isTimeSpawn = false; // Mặc định nghỉ trước khi vào Wave 1
+    private bool spawnOnTop;
+
     private Camera mainCamera;
-    Vector3 maxBounds, minBounds;
+    private Vector3 maxBounds, minBounds;
 
     void Start()
     {
         mainCamera = Camera.main;
         minBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.23f, mainCamera.nearClipPlane));
         maxBounds = mainCamera.ViewportToWorldPoint(new Vector3(1, 1, mainCamera.nearClipPlane));
+
+        TimeSpawnACard = Random.Range(10, 20);
+        ResetWarningUI();
+        spawnOnTop = Random.value > 0.5f; // Random hướng rơi cho Wave 1
     }
 
     void Update()
     {
-        timer += Time.deltaTime;
-        CardTimer += Time.deltaTime;
+        HandleRockWave();
+        HandleCardSpawn();
+        HandleSagittariusSkill();
+    }
 
-        // Khi đủ thời gian thì mới kiểm tra vị trí và sinh Rock
-        if (timer >= TimeSpawnARock && isTimeSpawn)
+    // --- QUẢN LÝ LUỒNG WAVE MƯA ĐÁ ---
+    private void HandleRockWave()
+    {
+        if (isTimeSpawn)
         {
-            bool spawnOnTop = Random.value > 0.5f;
-            wave++;
-            if (wave <= circleSpawn)
+            WarningTimer += Time.deltaTime;
+
+            // Phase 1: Cảnh báo
+            if (WarningTimer <= TimeWarning)
             {
-                if (spawnOnTop)
-                {
-                    // SpawnRockTop();
-                }
-                else
-                {
-                    // SpawnRockLeft();
-                }
-                timer = 0f; // Reset đếm thời gian spawn Rock
+                ShowWarningUI();
             }
-            if (wave == circleSpawn)
+            // Phase 2: Mưa đá rơi
+            else if (waveTimer < waveTime)
+            {
+                ResetWarningUI(); // Tắt cảnh báo khi đá bắt đầu rơi
+
+                waveTimer += Time.deltaTime;
+                timer += Time.deltaTime;
+
+                if (timer >= TimeSpawnARock)
+                {
+                    if (spawnOnTop) SpawnRockTop();
+                    else SpawnRockLeft();
+
+                    timer = 0f;
+                }
+            }
+            // Phase 3: Kết thúc Wave -> Chuyển sang thời gian nghỉ
+            else
             {
                 isTimeSpawn = false;
+                timer = 0f; // Reset dùng làm đếm giờ nghỉ
             }
         }
-        if (!isTimeSpawn)
+        else // Trạng thái nghỉ (Wait Time)
         {
+            timer += Time.deltaTime;
             if (timer >= timeWait)
             {
-                wave = 0;
-                isTimeSpawn = true;
-                timer = 0;
+                ResetWaveState();
             }
         }
+    }
+
+    // --- QUẢN LÝ SPAWN THẺ SKILL ---
+    private void HandleCardSpawn()
+    {
+        CardTimer += Time.deltaTime;
         if (CardTimer >= TimeSpawnACard)
         {
             bool spawnCardOnTop = Random.value > 0.5f;
-            if (spawnCardOnTop)
-            {
-                SpawnSkillTop();
-            }
-            else
-            {
-                SpawnSkillLeft();
-            }
-            CardTimer = 0f; // Reset đếm thời gian spawn Card
+            if (spawnCardOnTop) SpawnSkillTop();
+            else SpawnSkillLeft();
+
+            CardTimer = 0f;
+            TimeSpawnACard = Random.Range(10, 20);
         }
-        if (Control.Instance.currentSkill == CardSkillManager.SkillName.Sagittarius && Control.Instance.isUsingSkill == true)
+    }
+
+    // --- QUẢN LÝ SKILL SAGITTARIUS (TÊN LỬA) ---
+    private void HandleSagittariusSkill()
+    {
+        if (Control.Instance.currentSkill == CardSkillManager.SkillName.Sagittarius && Control.Instance.isUsingSkill)
         {
             rocketTimer += Time.deltaTime;
             if (rocketTimer >= TimeSpawnARocket)
             {
-               SpawnRocketDown();
+                SpawnRocketDown();
                 rocketTimer = 0f;
             }
         }
     }
 
-    void SpawnRockTop()
+    // --- HÀM BỔ TRỢ RESET STATE ---
+    private void ResetWaveState()
+    {
+        waveTimer = 0f;
+        timer = 0f;
+        WarningTimer = 0f;
+        isTimeSpawn = true;
+        spawnOnTop = Random.value > 0.5f; // Random hướng mới cho Wave tiếp theo
+    }
+
+    private void ShowWarningUI()
+    {
+        if (spawnOnTop)
+        {
+            warning_up.SetActive(true);
+            warning_up.GetComponent<Animator>().Play("Warning");
+        }
+        else
+        {
+            warning_left.SetActive(true);
+            warning_left.GetComponent<Animator>().Play("Warning");
+        }
+    }
+
+    private void ResetWarningUI()
+    {
+        if (warning_up.activeSelf) warning_up.SetActive(false);
+        if (warning_left.activeSelf) warning_left.SetActive(false);
+    }
+
+    // --- CÁC HÀM SPAWN OBJECT ---
+    private void SpawnRockTop()
     {
         if (RockPrefab == null) return;
 
         float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
-        float spawnY = maxBounds.y + 1f;
-        Vector3 spawnPosition = new Vector3(randomX, spawnY, 0f);
+        Vector3 spawnPosition = new Vector3(randomX, maxBounds.y + 1f, 0f);
 
         GameObject newRock = Instantiate(RockPrefab, spawnPosition, Quaternion.identity);
         Rock rockScript = newRock.GetComponent<Rock>();
         if (rockScript != null) rockScript.isFall = true;
     }
-    void SpawnRocketDown()
-    {
-        float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
-        float spawnY = minBounds.y - 1f;
-        Vector3 spawnPosition = new Vector3(randomX, spawnY, 0f);
-        GameObject newRocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
-    }
-    void SpawnSkillTop()
-    {
-        float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
-        float spawnY = maxBounds.y + 1f;
-        Vector3 spawnPosition = new Vector3(randomX, spawnY, 0f);
-        SpawnSkillCard(spawnPosition, true);
-    }
-    void SpawnRockLeft()
+
+    private void SpawnRockLeft()
     {
         if (RockPrefab == null) return;
 
         float randomY = Random.Range(minBounds.y + 0.5f, maxBounds.y - 0.5f);
-        float spawnX = minBounds.x - 1f;
-        Vector3 spawnPosition = new Vector3(spawnX, randomY, 0f);
+        Vector3 spawnPosition = new Vector3(minBounds.x - 1f, randomY, 0f);
 
         GameObject newRock = Instantiate(RockPrefab, spawnPosition, Quaternion.identity);
         Rock rockScript = newRock.GetComponent<Rock>();
-        Rigidbody2D rb = newRock.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.gravityScale = 0f;
         if (rockScript != null) rockScript.isFall = false;
+    }
 
+    private void SpawnRocketDown()
+    {
+        if (rocketPrefab == null) return;
+
+        float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
+        Vector3 spawnPosition = new Vector3(randomX, minBounds.y - 1f, 0f);
+        Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
     }
-    void SpawnRocketRight()
+
+    private void SpawnSkillTop()
+    {
+        float randomX = Random.Range(minBounds.x + 0.5f, maxBounds.x - 0.5f);
+        SpawnSkillCard(new Vector3(randomX, maxBounds.y + 1f, 0f), true);
+    }
+
+    private void SpawnSkillLeft()
     {
         float randomY = Random.Range(minBounds.y + 0.5f, maxBounds.y - 0.5f);
-        float spawnX = maxBounds.x + 1f;
-        Vector3 spawnPosition = new Vector3(randomY, spawnX, 0f);
-        GameObject newRocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
+        SpawnSkillCard(new Vector3(minBounds.x - 1f, randomY, 0f), false);
     }
-    void SpawnSkillLeft()
-    {
-        float randomY = Random.Range(minBounds.y + 0.5f, maxBounds.y - 0.5f);
-        float spawnX = minBounds.x - 1f;
-        Vector3 spawnPosition = new Vector3(spawnX, randomY, 0f);
-        SpawnSkillCard(spawnPosition, false);
-    }
-    // Hàm phụ trách khởi tạo Card, random chòm sao và cập nhật màu sắc
-    void SpawnSkillCard(Vector3 spawnPos, bool isFalling)
+
+    private void SpawnSkillCard(Vector3 spawnPos, bool isFalling)
     {
         if (cardPrefab == null) return;
 
         GameObject newSkill = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
-
-        // Lấy 1 chòm sao ngẫu nhiên từ Enum trong CardSkillManager
-        //CardSkillManager.SkillName randomSkill = (CardSkillManager.SkillName)Random.Range(0, System.Enum.GetValues(typeof(CardSkillManager.SkillName)).Length);
-        CardSkillManager.SkillName randomSkill = CardSkillManager.SkillName.Sagittarius;
-        // Đổi tên object (ví dụ: "Card_Pisces")
+        CardSkillManager.SkillName randomSkill = (CardSkillManager.SkillName)Random.Range(0, System.Enum.GetValues(typeof(CardSkillManager.SkillName)).Length - 1);
         newSkill.name = "Card_" + randomSkill.ToString();
 
-        // Gán thông số và kích hoạt hàm đổi màu theo tên
         Skill CardScript = newSkill.GetComponent<Skill>();
         if (CardScript != null)
         {
             CardScript.isFall = isFalling;
             CardScript.skillType = randomSkill;
             CardTimer = 0;
-            CardScript.ApplyCardColor(); // Ép tự cập nhật màu sắc ngay sau khi đổi tên
+            CardScript.ApplyCardColor();
         }
     }
 }

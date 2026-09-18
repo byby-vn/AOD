@@ -31,7 +31,7 @@ public class CardSkillManager : MonoBehaviour
         Capricorn,  // Ma Kết
         Aquarius,   // Bảo Bình
         Pisces,     // Song Ngư
-        Ophiuchus,   // Xà Phu
+        //Ophiuchus,   // Xà Phu
         None
     }
 
@@ -101,9 +101,9 @@ public class CardSkillManager : MonoBehaviour
                 ExecutePiscesSkill();
                 break;
 
-            case SkillName.Ophiuchus:
-                ExecuteOphiuchusSkill();
-                break;
+            // case SkillName.Ophiuchus:
+            //     ExecuteOphiuchusSkill();
+            //     break;
 
             default:
                 Debug.LogWarning("Khong tim thay skill phu hop!");
@@ -164,9 +164,9 @@ public class CardSkillManager : MonoBehaviour
                 EndPiscesSkill();
                 break;
 
-            case SkillName.Ophiuchus:
-                // EndOphiuchusSkill();
-                break;
+            // case SkillName.Ophiuchus:
+            //     // EndOphiuchusSkill();
+            //     break;
 
             default:
                 Debug.LogWarning("Khong tim thay skill de ket thuc!");

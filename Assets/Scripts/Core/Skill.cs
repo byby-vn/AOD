@@ -38,44 +38,44 @@ public class Skill : MonoBehaviour
         switch (skillType)
         {
             case CardSkillManager.SkillName.Aries:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FF3333", out Color cAries) ? cAries : Color.red;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FFFFFF", out Color cAries) ? cAries : Color.white;
                 break;
             case CardSkillManager.SkillName.Taurus:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#4CAF50", out Color cTaurus) ? cTaurus : Color.green;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FF0000", out Color cTaurus) ? cTaurus : Color.orange;
                 break;
             case CardSkillManager.SkillName.Gemini:
                 spriteRenderer.color = ColorUtility.TryParseHtmlString("#FFEB3B", out Color cGemini) ? cGemini : Color.yellow;
                 break;
             case CardSkillManager.SkillName.Cancer:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#2196F3", out Color cCancer) ? cCancer : Color.blue;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#00E676", out Color cCancer) ? cCancer : Color.green;
                 break;
             case CardSkillManager.SkillName.Leo:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FF9800", out Color cLeo) ? cLeo : Color.orange;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#8C7761", out Color cLeo) ? cLeo : Color.gray;
                 break;
             case CardSkillManager.SkillName.Virgo:
                 spriteRenderer.color = ColorUtility.TryParseHtmlString("#8BC34A", out Color cVirgo) ? cVirgo : Color.green;
                 break;
             case CardSkillManager.SkillName.Libra:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#E91E63", out Color cLibra) ? cLibra : Color.magenta;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#005AFF", out Color cLibra) ? cLibra : Color.skyBlue;
                 break;
             case CardSkillManager.SkillName.Scorpio:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#9C27B0", out Color cScorpio) ? cScorpio : Color.purple;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#000000", out Color cScorpio) ? cScorpio : Color.purple;
                 break;
             case CardSkillManager.SkillName.Sagittarius:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FF5722", out Color cSag) ? cSag : Color.red;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FF8200", out Color cSag) ? cSag : Color.red;
                 break;
             case CardSkillManager.SkillName.Capricorn:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#795548", out Color cCap) ? cCap : Color.gray;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#FF00BE", out Color cCap) ? cCap : Color.gray;
                 break;
             case CardSkillManager.SkillName.Aquarius:
                 spriteRenderer.color = ColorUtility.TryParseHtmlString("#00BCD4", out Color cAqua) ? cAqua : Color.cyan;
                 break;
             case CardSkillManager.SkillName.Pisces:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#03A9F4", out Color cPisces) ? cPisces : Color.cyan;
+                spriteRenderer.color = ColorUtility.TryParseHtmlString("#B3B3B3", out Color cPisces) ? cPisces : Color.cyan;
                 break;
-            case CardSkillManager.SkillName.Ophiuchus:
-                spriteRenderer.color = ColorUtility.TryParseHtmlString("#00E676", out Color cOphi) ? cOphi : Color.green;
-                break;
+            // case CardSkillManager.SkillName.Ophiuchus:
+            //     spriteRenderer.color = ColorUtility.TryParseHtmlString("#00E676", out Color cOphi) ? cOphi : Color.green;
+            //     break;
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)

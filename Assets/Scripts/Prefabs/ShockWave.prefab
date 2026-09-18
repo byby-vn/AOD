@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3021316464284389144}
   - component: {fileID: 3791631807476926837}
   - component: {fileID: 8965626738834969502}
+  - component: {fileID: -7787071040572746249}
   m_Layer: 0
   m_Name: ShockWave
   m_TagString: Untagged
@@ -126,7 +127,7 @@ CircleCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 1
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
@@ -143,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f42a08b416a8bcda96642649067b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AriesShockwave
+  animator: {fileID: 0}
 --- !u!95 &8965626738834969502
 Animator:
   serializedVersion: 7
@@ -165,3 +167,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!250 &-7787071040572746249
+PointEffector2D:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5513955523921842895}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceMagnitude: 30
+  m_ForceVariation: 0
+  m_DistanceScale: 1
+  m_ForceSource: 0
+  m_ForceTarget: 0
+  m_ForceMode: 0
+  m_LinearDamping: 0
+  m_AngularDamping: 0

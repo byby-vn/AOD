@@ -1,49 +1,50 @@
-using System;
 using UnityEngine;
 
 public class ComponentSkillCircle : MonoBehaviour
 {
     public Animator animator;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
     }
+
     void Start()
     {
         ActiveAnimation();
     }
+
     void ActiveAnimation()
-    {
-        if(Control.Instance.currentSkill == CardSkillManager.SkillName.Aries)
-        {
-            Debug.Log("Played animation FadeIn");
-            animator.Play("FadeIn");
-        }
-        if(Control.Instance.currentSkill == CardSkillManager.SkillName.Taurus)
-        {
-            Debug.Log("Played animation Larger");
-            animator.Play("Larger");
-        }
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (Control.Instance.currentSkill == CardSkillManager.SkillName.Aries)
         {
-            if (collision.CompareTag("Rock"))
+            animator.Play("FadeIn");
+        }
+        else if (Control.Instance.currentSkill == CardSkillManager.SkillName.Taurus)
+        {
+            animator.Play("Larger");
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Rock")) return;
+
+        if (Control.Instance.currentSkill == CardSkillManager.SkillName.Aries)
+        {
+            Rock rock = collision.GetComponent<Rock>();
+            if (rock != null)
             {
-                Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
-                Vector2 pushDirection = collision.transform.position - transform.position; //lấy hướng từ cục đá tới tâm vòng tròn
-                float pushForce = 15f; //lực đẩy
-                rb.linearVelocity = Vector2.zero;
-                rb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+                // Chuẩn hóa Vector hướng đẩy (normalized)
+                Vector2 pushDirection = (collision.transform.position - transform.position).normalized;
+                float pushForce = 20f; // Độ mạnh cú hất
+
+                rock.ApplyAriesPush(pushDirection, pushForce);
             }
         }
-        if(Control.Instance.currentSkill == CardSkillManager.SkillName.Taurus)
+        else if (Control.Instance.currentSkill == CardSkillManager.SkillName.Taurus)
         {
-            if(collision.CompareTag("Rock"))
-            {
-                Destroy(collision.gameObject);
-            }
+            Destroy(collision.gameObject);
         }
     }
 }

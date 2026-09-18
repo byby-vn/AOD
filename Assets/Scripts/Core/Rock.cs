@@ -9,11 +9,15 @@ public class Rock : MonoBehaviour
     public float libraGravityScale = -0.5f;
     public float maxPhysicsVelocity = 4f;
 
+    [Header("Aries Settings")]
+    public float ariesPushDuration = 0.5f; // Thời gian tắt Translate để đá văng tự do
+    private bool isPushedByAries = false;
+    private float ariesPushTimer = 0f;
+
     private Rigidbody2D rb;
     public bool isFall;
     private bool wasUsingLibra;
 
-    // Lực trọng lực chuẩn Trái Đất
     private readonly Vector2 gravityForce = new Vector2(0f, -9.81f);
 
     void Start()
@@ -24,17 +28,14 @@ public class Rock : MonoBehaviour
 
     void FixedUpdate()
     {
-        // sử dụng trọng lực cục bộ bằng addforce 
         if (rb.bodyType == RigidbodyType2D.Dynamic)
         {
             if (isFall)
             {
-                // Đá rơi: Chịu lực kéo XUỐNG DƯỚI 
                 rb.AddForce(gravityForce * rb.gravityScale, ForceMode2D.Force);
             }
             else
             {
-                // Đá ngang: Chịu lực kéo SANG PHẢI 
                 Vector2 horizontalGravity = new Vector2(9.81f, 0f);
                 rb.AddForce(horizontalGravity * rb.gravityScale, ForceMode2D.Force);
             }
@@ -43,6 +44,17 @@ public class Rock : MonoBehaviour
 
     void Update()
     {
+        // 1. Đếm giờ xử lý trạng thái bị Aries đẩy văng
+        if (isPushedByAries)
+        {
+            ariesPushTimer += Time.deltaTime;
+            if (ariesPushTimer >= ariesPushDuration)
+            {
+                isPushedByAries = false;
+                ariesPushTimer = 0f;
+            }
+        }
+
         bool isLibra = Control.Instance.currentSkill == CardSkillManager.SkillName.Libra && Control.Instance.isUsingSkill;
         bool isAquarius = Control.Instance.currentSkill == CardSkillManager.SkillName.Aquarius && Control.Instance.isUsingSkill;
 
@@ -58,7 +70,6 @@ public class Rock : MonoBehaviour
             rb.gravityScale = libraGravityScale;
             nowSpeed = -fallSpeed;
 
-            // Kẹp trần vận tốc tích lũy
             rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxPhysicsVelocity);
             wasUsingLibra = true;
         }
@@ -67,7 +78,7 @@ public class Rock : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.gravityScale = 1f;
             nowSpeed = fallSpeed;
-            rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxPhysicsVelocity);
+
             if (wasUsingLibra)
             {
                 rb.linearVelocity = Vector2.zero;
@@ -75,14 +86,26 @@ public class Rock : MonoBehaviour
             }
         }
 
-        // Động cơ di chuyển Translate
-        Vector3 moveDirection = isFall ? Vector3.down : Vector3.right;
-        transform.Translate(moveDirection * nowSpeed * Time.deltaTime);
+        // 2. Chỉ di chuyển bằng Translate khi KHÔNG bị Aries hất văng
+        if (!isPushedByAries)
+        {
+            Vector3 moveDirection = isFall ? Vector3.down : Vector3.right;
+            transform.Translate(moveDirection * nowSpeed * Time.deltaTime);
+        }
 
-        // Hủy đá khi out map
         if (Mathf.Abs(transform.position.x) > 20f || Mathf.Abs(transform.position.y) > 20f)
         {
             Destroy(gameObject);
         }
+    }
+
+    // 3. Hàm nhận lực đẩy từ Aries
+    public void ApplyAriesPush(Vector2 pushDirection, float pushForce)
+    {
+        isPushedByAries = true;
+        ariesPushTimer = 0f;
+
+        rb.bodyType = RigidbodyType2D.Dynamic; // Chuyển sang Dynamic nếu đang bị freeze bởi Aquarius
+        rb.linearVelocity = pushDirection * pushForce; // Ép vận tốc hất văng tức thì
     }
 }
