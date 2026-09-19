@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public static Spawner Instance { get; private set; }
     [Header("Prefabs")]
     public GameObject RockPrefab;
     public GameObject cardPrefab;
@@ -29,12 +30,25 @@ public class Spawner : MonoBehaviour
     // States
     private bool isTimeSpawn = false; // Mặc định nghỉ trước khi vào Wave 1
     private bool spawnOnTop;
+    bool isAquarius; 
 
     private Camera mainCamera;
     private Vector3 maxBounds, minBounds;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
+        
         mainCamera = Camera.main;
         minBounds = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.23f, mainCamera.nearClipPlane));
         maxBounds = mainCamera.ViewportToWorldPoint(new Vector3(1, 1, mainCamera.nearClipPlane));
@@ -63,15 +77,16 @@ public class Spawner : MonoBehaviour
             {
                 ShowWarningUI();
             }
+            
             // Phase 2: Mưa đá rơi
             else if (waveTimer < waveTime)
             {
                 ResetWarningUI(); // Tắt cảnh báo khi đá bắt đầu rơi
-
+                isAquarius = Control.Instance.currentSkill == CardSkillManager.SkillName.Aquarius && Control.Instance.isUsingSkill;
                 waveTimer += Time.deltaTime;
                 timer += Time.deltaTime;
 
-                if (timer >= TimeSpawnARock)
+                if (timer >= TimeSpawnARock && !isAquarius)
                 {
                     if (spawnOnTop) SpawnRockTop();
                     else SpawnRockLeft();

@@ -250,11 +250,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2986730962182702636, guid: ea4efd493f629b7159036b5f361fea54, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5446587174691259333, guid: ea4efd493f629b7159036b5f361fea54, type: 3}
       propertyPath: skillType
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5506133389918306821, guid: ea4efd493f629b7159036b5f361fea54, type: 3}
       propertyPath: m_Enabled
@@ -311,7 +311,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 18, y: 0}
+  m_AnchoredPosition: {x: 18, y: 64}
   m_SizeDelta: {x: 1920, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!95 &47577589

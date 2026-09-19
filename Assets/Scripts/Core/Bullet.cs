@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public Vector2 dir;
-    public float flySpeed = 10f;
+    public float flySpeed = 30f;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     public float objectWidth;
@@ -57,12 +57,11 @@ public class Bullet : MonoBehaviour
         transform.position = clampedPosition;
         timer += Time.deltaTime;
         // hết 1 giây bay thì khóa 
-        if (timer >= 1.5)
+        if (transform.position.y>=maxY || transform.position.x<= minX)
         {
             AnchorBullet(transform.position.x, transform.position.y);
         }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isAnchored && collision.CompareTag("Rock"))

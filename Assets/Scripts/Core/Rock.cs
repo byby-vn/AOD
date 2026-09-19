@@ -4,7 +4,7 @@ public class Rock : MonoBehaviour
 {
     public float fallSpeed = 10f;
     public float nowSpeed;
-    
+
     [Header("Libra Settings")]
     public float libraGravityScale = -0.5f;
     public float maxPhysicsVelocity = 4f;
@@ -17,6 +17,9 @@ public class Rock : MonoBehaviour
     private Rigidbody2D rb;
     public bool isFall;
     private bool wasUsingLibra;
+    private bool isLibra;
+    private bool isAquarius;
+
 
     private readonly Vector2 gravityForce = new Vector2(0f, -9.81f);
 
@@ -24,6 +27,7 @@ public class Rock : MonoBehaviour
     {
         Physics2D.gravity = Vector2.zero;
         rb = GetComponent<Rigidbody2D>();
+        
     }
 
     void FixedUpdate()
@@ -54,10 +58,8 @@ public class Rock : MonoBehaviour
                 ariesPushTimer = 0f;
             }
         }
-
-        bool isLibra = Control.Instance.currentSkill == CardSkillManager.SkillName.Libra && Control.Instance.isUsingSkill;
-        bool isAquarius = Control.Instance.currentSkill == CardSkillManager.SkillName.Aquarius && Control.Instance.isUsingSkill;
-
+        isLibra = Control.Instance.currentSkill == CardSkillManager.SkillName.Libra && Control.Instance.isUsingSkill;
+        isAquarius = Control.Instance.currentSkill == CardSkillManager.SkillName.Aquarius && Control.Instance.isUsingSkill;
         if (isAquarius)
         {
             rb.bodyType = RigidbodyType2D.Kinematic;
